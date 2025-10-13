@@ -1,42 +1,78 @@
-import React, { useState } from 'react'
-import { Container, Typography, Box, TextField, Button, Alert } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import { registerUser } from '../services/api'
+// src/pages/Register.jsx
+import React, { useState } from 'react';
+import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+const Register = () => {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value })
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    try {
-      await registerUser(form.name, form.email, form.password)
-      navigate('/dashboard')
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (form.name && form.email && form.password) {
+      sessionStorage.setItem('clinica_token', 'demo-token');
+      navigate('/dashboard');
     }
-  }
+  };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Box sx={{ bgcolor: '#fff', p: 4, borderRadius: 2, boxShadow: 2 }}>
-        <Typography variant="h5" gutterBottom>Create account</Typography>
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        <Box component="form" onSubmit={handleSubmit}>
-          <TextField fullWidth label="Full Name" name="name" value={form.name} onChange={handleChange} sx={{ mb: 2 }} required />
-          <TextField fullWidth label="Email" name="email" value={form.email} onChange={handleChange} sx={{ mb: 2 }} required />
-          <TextField fullWidth label="Password" name="password" type="password" value={form.password} onChange={handleChange} sx={{ mb: 2 }} required />
-          <Button type="submit" variant="contained" color="secondary" fullWidth disabled={loading}>{loading ? 'Creating...' : 'Create account'}</Button>
-        </Box>
-      </Box>
-    </Container>
-  )
-}
+    <Box sx={{ backgroundColor: '#F9FAFB', minHeight: '100vh', py: 10 }}>
+      <Container maxWidth="sm">
+        <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 3 }}>
+          <Typography variant="h5" fontWeight={600} align="center" gutterBottom>
+            Create Your Account
+          </Typography>
+          <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
+            Get started with ClinicaVoice today.
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Full Name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+              required
+            />
+            <TextField
+              fullWidth
+              label="Email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+              required
+            />
+            <TextField
+              fullWidth
+              type="password"
+              label="Password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              sx={{ mb: 3 }}
+              required
+            />
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              sx={{
+                backgroundColor: '#26A69A',
+                '&:hover': { backgroundColor: '#1d8379' },
+              }}
+            >
+              Get Started
+            </Button>
+          </form>
+        </Paper>
+      </Container>
+    </Box>
+  );
+};
+
+export default Register;

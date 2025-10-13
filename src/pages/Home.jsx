@@ -1,20 +1,61 @@
-import React from 'react'
-import { Container, Typography, Stack, Button, Box } from '@mui/material'
-import { Link } from 'react-router-dom'
+// src/pages/Home.jsx
+import React from 'react';
+import { Box, Button, Container, Typography, Grid, Paper } from '@mui/material';
 
-export default function Home() {
+const Home = () => {
   return (
-    <Box sx={{ bgcolor: '#F9FAFB', minHeight: 'calc(100vh - 128px)', py: 12 }}>
-      <Container maxWidth="md" sx={{ textAlign: 'center' }}>
-        <Typography variant="h3" gutterBottom sx={{ color: '#000' }}>Welcome to ClinicaVoice</Typography>
-        <Typography variant="subtitle1" color="textSecondary" sx={{ mb: 6 }}>
+    <Box sx={{ backgroundColor: '#F9FAFB', minHeight: '100vh', color: '#000' }}>
+      <Container sx={{ py: 10, textAlign: 'center' }}>
+        <Typography variant="h3" fontWeight={700} gutterBottom>
+          Welcome to ClinicaVoice
+        </Typography>
+        <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
+          Dictate. Transcribe. Care.
+        </Typography>
+
+        <Typography variant="body1" sx={{ maxWidth: 600, mx: 'auto', mb: 5 }}>
           AI-powered voice transcription designed to help healthcare professionals document efficiently, accurately, and securely.
         </Typography>
-        <Stack direction="row" justifyContent="center" spacing={2}>
-          <Button component={Link} to="/register" variant="contained" sx={{ bgcolor: '#C62828', '&:hover': { bgcolor: '#a32020' }, px: 4, py: 1.5 }}>Get Started</Button>
-          <Button component={Link} to="/features" variant="outlined" sx={{ color: '#C62828', borderColor: '#C62828', px: 4, py: 1.5 }}>Learn More</Button>
-        </Stack>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <Button variant="contained" sx={{ backgroundColor: '#C62828', px: 4, '&:hover': { backgroundColor: '#a91e1e' } }}>
+            Get Started
+          </Button>
+          <Button variant="outlined" sx={{ color: '#C62828', borderColor: '#C62828', px: 4, '&:hover': { backgroundColor: '#fff5f5' } }}>
+            Learn More
+          </Button>
+        </Box>
+      </Container>
+
+      {/* WHY CLINICAVOICE */}
+      <Container sx={{ py: 8 }}>
+        <Typography variant="h4" fontWeight={600} align="center" gutterBottom>
+          Why ClinicaVoice
+        </Typography>
+
+        <Grid container spacing={4} sx={{ mt: 3 }}>
+          {['Accuracy', 'Security', 'Efficiency'].map((title, i) => (
+            <Grid item xs={12} md={4} key={i}>
+              <Paper
+                elevation={3}
+                sx={{
+                  p: 4,
+                  textAlign: 'center',
+                  transition: 'all 0.3s',
+                  '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 },
+                }}
+              >
+                <Typography variant="h6" fontWeight={600}>{title}</Typography>
+                <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque facilisis.
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </Box>
-  )
-}
+  );
+};
+
+export default Home;

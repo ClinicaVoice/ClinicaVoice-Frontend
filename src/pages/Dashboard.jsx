@@ -1,60 +1,114 @@
-import React, { useEffect, useState } from 'react'
-import { Container, Grid, Card, CardContent, Typography, Paper, Box } from '@mui/material'
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { getDashboardStats, getTranscriptions } from '../services/api'
+// src/pages/Dashboard.jsx
+import React from 'react';
+import { Box, Container, Grid, Paper, Typography, Button } from '@mui/material';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-const activity = [
-  { date: '2025-09-01', transcriptions: 5 },
-  { date: '2025-09-05', transcriptions: 12 },
-  { date: '2025-09-10', transcriptions: 7 },
-  { date: '2025-09-15', transcriptions: 20 },
-  { date: '2025-09-20', transcriptions: 15 },
-  { date: '2025-09-25', transcriptions: 22 },
-  { date: '2025-09-30', transcriptions: 18 },
-]
+const mockData = [
+  { date: 'Oct 1', value: 10 },
+  { date: 'Oct 5', value: 25 },
+  { date: 'Oct 10', value: 18 },
+  { date: 'Oct 15', value: 32 },
+  { date: 'Oct 20', value: 20 },
+  { date: 'Oct 25', value: 28 },
+];
 
-export default function Dashboard() {
-  const [stats, setStats] = useState(null)
-  const [trans, setTrans] = useState([])
-
-  useEffect(() => {
-    async function fetchData(){
-      const s = await getDashboardStats()
-      const t = await getTranscriptions()
-      setStats(s); setTrans(t)
-    }
-    fetchData()
-  }, [])
-
-  if (!stats) return <Container sx={{ py: 8 }}>Loading...</Container>
-
+const Dashboard = () => {
   return (
-    <Container sx={{ py: 8 }}>
-      <Typography variant="h4" gutterBottom>Dashboard</Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={4}><Card><CardContent><Typography color="text.secondary">Active Patients</Typography><Typography variant="h5">{stats.activePatients}</Typography></CardContent></Card></Grid>
-        <Grid item xs={12} md={4}><Card><CardContent><Typography color="text.secondary">Recent Transcriptions</Typography><Typography variant="h5">{stats.recentTranscriptions}</Typography></CardContent></Card></Grid>
-        <Grid item xs={12} md={4}><Card><CardContent><Typography color="text.secondary">Pending Reviews</Typography><Typography variant="h5">{stats.pendingReviews}</Typography></CardContent></Card></Grid>
-      </Grid>
+    <Box sx={{ backgroundColor: '#F9FAFB', minHeight: '100vh', py: 8 }}>
+      <Container>
+        <Typography variant="h4" fontWeight={700} sx={{ mb: 4 }}>
+          Dashboard Overview
+        </Typography>
 
-      <Paper sx={{ mt: 6, p: 3 }}>
-        <Typography variant="h6" gutterBottom>Activity (Last 30 days)</Typography>
-        <Box sx={{ width: '100%', height: 300 }}>
-          <ResponsiveContainer>
-            <LineChart data={activity}>
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="transcriptions" stroke="#26A69A" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </Box>
-      </Paper>
+        <Grid container spacing={3} sx={{ mb: 5 }}>
+          {[
+            { title: 'Active Patients', value: 124 },
+            { title: 'Recent Transcriptions', value: 32 },
+            { title: 'Pending Reviews', value: 6 },
+          ].map((stat, i) => (
+            <Grid item xs={12} md={4} key={i}>
+              <Paper sx={{ p: 3, borderRadius: 3, textAlign: 'center', boxShadow: 2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  {stat.title}
+                </Typography>
+                <Typography variant="h5" fontWeight={700}>
+                  {stat.value}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
 
-      <Paper sx={{ mt: 4, p: 3 }}>
-        <Typography variant="h6" gutterBottom>Recent Notes</Typography>
-        {trans.map(t => <Typography key={t.id}>{t.patient} — {t.date} — {t.status}</Typography>)}
-      </Paper>
-    </Container>
-  )
-}
+        <Paper sx={{ p: 3, borderRadius: 3, mb: 5 }}>
+          <Typography fontWeight={600} sx={{ mb: 2 }}>
+            Activity Trend
+          </Typography>
+          <Box sx={{ width: '100%', height: 300 }}>
+            <ResponsiveContainer>
+              <LineChart data={mockData}>
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#26A69A"
+                  strokeWidth={3}
+                  dot={{ fill: '#C62828' }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Box>
+        </Paper>
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Paper sx={{ p: 3, borderRadius: 3 }}>
+              <Typography fontWeight={600} sx={{ mb: 2 }}>
+                Recent Notes
+              </Typography>
+              {['Dr. John - SOAP Note', 'Dr. Omotola - HPI Report', 'Dr. Brian - AI Draft'].map(
+                (item, i) => (
+                  <Typography key={i} variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+                    • {item}
+                  </Typography>
+                )
+              )}
+            </Paper>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Paper sx={{ p: 3, borderRadius: 3 }}>
+              <Typography fontWeight={600} sx={{ mb: 2 }}>
+                Quick Actions
+              </Typography>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mb: 1, backgroundColor: '#C62828', '&:hover': { backgroundColor: '#a91e1e' } }}
+              >
+                New Transcription
+              </Button>
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{ mb: 1, borderColor: '#2E3A59', color: '#2E3A59' }}
+              >
+                Upload Audio
+              </Button>
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{ borderColor: '#26A69A', color: '#26A69A' }}
+              >
+                Export Report
+              </Button>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
+
+export default Dashboard;
