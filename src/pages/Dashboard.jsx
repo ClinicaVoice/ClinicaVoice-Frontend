@@ -1,114 +1,127 @@
-// src/pages/Dashboard.jsx
-import React from 'react';
-import { Box, Container, Grid, Paper, Typography, Button } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import Sidebar from "../components/Sidebar";
+import DashboardCard from "../components/DashboardCard";
+import { getStats, getActivityChart } from "../api/mockApi";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
-const mockData = [
-  { date: 'Oct 1', value: 10 },
-  { date: 'Oct 5', value: 25 },
-  { date: 'Oct 10', value: 18 },
-  { date: 'Oct 15', value: 32 },
-  { date: 'Oct 20', value: 20 },
-  { date: 'Oct 25', value: 28 },
-];
+export default function Dashboard() {
+  const { t } = useTranslation();
+  const [stats, setStats] = useState({});
+  const [activityChart, setActivityChart] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const Dashboard = () => {
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const statsData = await getStats();
+        const activityData = await getActivityChart();
+        setStats(statsData);
+        setActivityChart(activityData);
+      } catch (error) {
+        console.error("Failed to load dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
-    <Box sx={{ backgroundColor: '#F9FAFB', minHeight: '100vh', py: 8 }}>
-      <Container>
-        <Typography variant="h4" fontWeight={700} sx={{ mb: 4 }}>
-          Dashboard Overview
-        </Typography>
+    <div className="flex flex-col md:flex-row max-w-7xl mx-auto px-6 py-8 gap-6">
+      <Sidebar />
 
-        <Grid container spacing={3} sx={{ mb: 5 }}>
-          {[
-            { title: 'Active Patients', value: 124 },
-            { title: 'Recent Transcriptions', value: 32 },
-            { title: 'Pending Reviews', value: 6 },
-          ].map((stat, i) => (
-            <Grid item xs={12} md={4} key={i}>
-              <Paper sx={{ p: 3, borderRadius: 3, textAlign: 'center', boxShadow: 2 }}>
-                <Typography variant="body2" color="text.secondary">
-                  {stat.title}
-                </Typography>
-                <Typography variant="h5" fontWeight={700}>
-                  {stat.value}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
+      <div className="flex-1">
+        <h1 className="text-3xl font-bold text-softNavy mb-6">
+          {t("dashboard_overview")}
+        </h1>
 
-        <Paper sx={{ p: 3, borderRadius: 3, mb: 5 }}>
-          <Typography fontWeight={600} sx={{ mb: 2 }}>
-            Activity Trend
-          </Typography>
-          <Box sx={{ width: '100%', height: 300 }}>
-            <ResponsiveContainer>
-              <LineChart data={mockData}>
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#26A69A"
-                  strokeWidth={3}
-                  dot={{ fill: '#C62828' }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </Box>
-        </Paper>
+        {loading ? (
+          <div className="text-center text-gray-500 py-20">
+            {t("loading")}...
+          </div>
+        ) : (
+          <>
+            {/* Top cards */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <DashboardCard
+                title={t("dashboard_patients")}
+                value={stats.activePatients}
+              />
+              <DashboardCard
+                title={t("dashboard_transcriptions")}
+                value={stats.recentTranscriptions}
+              />
+              <DashboardCard
+                title={t("dashboard_reviews")}
+                value={stats.pendingReviews}
+              />
+            </div>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Paper sx={{ p: 3, borderRadius: 3 }}>
-              <Typography fontWeight={600} sx={{ mb: 2 }}>
-                Recent Notes
-              </Typography>
-              {['Dr. John - SOAP Note', 'Dr. Omotola - HPI Report', 'Dr. Brian - AI Draft'].map(
-                (item, i) => (
-                  <Typography key={i} variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
-                    • {item}
-                  </Typography>
-                )
-              )}
-            </Paper>
-          </Grid>
+            {/* Activity Chart */}
+            <div className="bg-white rounded-lg border shadow-sm p-6 mb-8">
+              <h2 className="text-xl font-semibold text-softNavy mb-3">
+                {t("dashboard_activity")}
+              </h2>
+              <div style={{ width: "100%", height: 250 }}>
+                <ResponsiveContainer>
+                  <LineChart data={activityChart}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" stroke="#999" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line
+                      type="monotone"
+                      dataKey="transcriptions"
+                      stroke="#C62828"
+                      strokeWidth={2}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
 
-          <Grid item xs={12} md={6}>
-            <Paper sx={{ p: 3, borderRadius: 3 }}>
-              <Typography fontWeight={600} sx={{ mb: 2 }}>
-                Quick Actions
-              </Typography>
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mb: 1, backgroundColor: '#C62828', '&:hover': { backgroundColor: '#a91e1e' } }}
-              >
-                New Transcription
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                sx={{ mb: 1, borderColor: '#2E3A59', color: '#2E3A59' }}
-              >
-                Upload Audio
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                sx={{ borderColor: '#26A69A', color: '#26A69A' }}
-              >
-                Export Report
-              </Button>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
+            {/* Quick Actions */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white border rounded-lg p-5">
+                <h3 className="font-semibold mb-3 text-softNavy">
+                  {t("dashboard_recentNotes")}
+                </h3>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>Dr. Jane Doe — {t("transcribed")} (2025-09-30)</li>
+                  <li>Dr. Samuel K — {t("pendingReview")} (2025-09-29)</li>
+                  <li>Dr. Peter Lin — {t("reviewed")} (2025-09-28)</li>
+                </ul>
+              </div>
+
+              <div className="bg-white border rounded-lg p-5">
+                <h3 className="font-semibold mb-3 text-softNavy">
+                  {t("dashboard_quickActions")}
+                </h3>
+                <div className="flex flex-col gap-3">
+                  <button className="px-4 py-2 bg-mapleRed text-white rounded hover:bg-red-700">
+                    {t("action_newTranscription")}
+                  </button>
+                  <button className="px-4 py-2 border border-softNavy rounded hover:bg-softNavy hover:text-white">
+                    {t("action_uploadAudio")}
+                  </button>
+                  <button className="px-4 py-2 border border-softNavy rounded hover:bg-softNavy hover:text-white">
+                    {t("action_exportReport")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
-};
-
-export default Dashboard;
+}

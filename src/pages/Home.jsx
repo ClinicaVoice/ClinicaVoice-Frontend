@@ -1,61 +1,51 @@
-// src/pages/Home.jsx
-import React from 'react';
-import { Box, Button, Container, Typography, Grid, Paper } from '@mui/material';
+import React from "react";
+import { Container, Box, Typography, Button, Grid, Card, CardContent } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { Link as RouterLink } from "react-router-dom";
 
-const Home = () => {
+export default function Home() {
+  const { t } = useTranslation();
+
   return (
-    <Box sx={{ backgroundColor: '#F9FAFB', minHeight: '100vh', color: '#000' }}>
-      <Container sx={{ py: 10, textAlign: 'center' }}>
-        <Typography variant="h3" fontWeight={700} gutterBottom>
-          Welcome to ClinicaVoice
-        </Typography>
-        <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
-          Dictate. Transcribe. Care.
-        </Typography>
+    <Box sx={{ backgroundColor: "#F9FAFB", py: 6 }}>
+      <Container maxWidth="lg" sx={{ textAlign: "center", py: 6 }}>
+        <Typography variant="h2" sx={{ color: "#2E3A59", fontWeight: 800, mb: 1 }}>ClinicaVoice</Typography>
+        <Typography variant="h5" sx={{ color: "text.secondary", mb: 3 }}>{t("hero_tagline")}</Typography>
+        <Typography sx={{ maxWidth: 800, mx: "auto", color: "text.secondary", mb: 4 }}>{t("hero_description")}</Typography>
 
-        <Typography variant="body1" sx={{ maxWidth: 600, mx: 'auto', mb: 5 }}>
-          AI-powered voice transcription designed to help healthcare professionals document efficiently, accurately, and securely.
-        </Typography>
-
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <Button variant="contained" sx={{ backgroundColor: '#C62828', px: 4, '&:hover': { backgroundColor: '#a91e1e' } }}>
-            Get Started
-          </Button>
-          <Button variant="outlined" sx={{ color: '#C62828', borderColor: '#C62828', px: 4, '&:hover': { backgroundColor: '#fff5f5' } }}>
-            Learn More
-          </Button>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 6 }}>
+          <Button component={RouterLink} to="/register" variant="contained" sx={{ bgcolor: "#26A69A", "&:hover": { bgcolor: "#1d8777" } }}>{t("hero_cta1")}</Button>
+          <Button component={RouterLink} to="/about" variant="outlined" sx={{ borderColor: "#C62828", color: "#C62828" }}>{t("hero_cta2")}</Button>
         </Box>
-      </Container>
 
-      {/* WHY CLINICAVOICE */}
-      <Container sx={{ py: 8 }}>
-        <Typography variant="h4" fontWeight={600} align="center" gutterBottom>
-          Why ClinicaVoice
-        </Typography>
-
-        <Grid container spacing={4} sx={{ mt: 3 }}>
-          {['Accuracy', 'Security', 'Efficiency'].map((title, i) => (
-            <Grid item xs={12} md={4} key={i}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 4,
-                  textAlign: 'center',
-                  transition: 'all 0.3s',
-                  '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 },
-                }}
-              >
-                <Typography variant="h6" fontWeight={600}>{title}</Typography>
-                <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque facilisis.
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
+        {/* Why ClinicaVoice - 3 columns */}
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <Card sx={{ transition: "transform .2s, box-shadow .2s", "&:hover": { transform: "translateY(-6px)", boxShadow: 6 } }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: "#2E3A59", fontWeight: 700 }}>{t("why_1_title")}</Typography>
+                <Typography variant="body2" color="text.secondary">{t("why_1_text")}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card sx={{ transition: "transform .2s, box-shadow .2s", "&:hover": { transform: "translateY(-6px)", boxShadow: 6 } }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: "#2E3A59", fontWeight: 700 }}>{t("why_2_title")}</Typography>
+                <Typography variant="body2" color="text.secondary">{t("why_2_text")}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card sx={{ transition: "transform .2s, box-shadow .2s", "&:hover": { transform: "translateY(-6px)", boxShadow: 6 } }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: "#2E3A59", fontWeight: 700 }}>{t("why_3_title")}</Typography>
+                <Typography variant="body2" color="text.secondary">{t("why_3_text")}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </Container>
     </Box>
   );
-};
-
-export default Home;
+}

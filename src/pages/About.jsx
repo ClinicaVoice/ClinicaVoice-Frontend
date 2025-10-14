@@ -1,64 +1,156 @@
 // src/pages/About.jsx
-import React from 'react';
-import { Box, Container, Typography, Grid, Paper, Avatar } from '@mui/material';
+import React from "react";
+import { Container, Box, Typography, Grid, Card, CardContent, Avatar, IconButton } from "@mui/material";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { useTranslation } from "react-i18next";
 
 const team = [
-  { name: 'John Austria', role: 'Project Manager' },
-  { name: 'Phoebe', role: 'Frontend Developer' },
-  { name: 'Brian', role: 'AI Specialist' },
-  { name: 'Chinedu', role: 'Backend Developer' },
-  { name: 'Onyebuchi', role: 'DevOps Engineer' },
-  { name: 'Amaka', role: 'QA & Documentation' },
+  { name: "John Austria", roleKey: "role_pm" },
+  { name: "Omotola", roleKey: "role_frontend" },
+  { name: "Brian", roleKey: "role_ai" },
+  { name: "Chinedu", roleKey: "role_backend" },
+  { name: "Onyebuchi", roleKey: "role_devops" },
+  { name: "Amaka", roleKey: "role_qa" },
 ];
 
-const About = () => {
+export default function About() {
+  const { t } = useTranslation();
+
   return (
-    <Box sx={{ backgroundColor: '#F9FAFB', color: '#000', minHeight: '100vh' }}>
-      <Container sx={{ py: 8 }}>
-        <Typography variant="h4" fontWeight={700} align="center" gutterBottom>
-          About ClinicaVoice
+    <Box sx={{ backgroundColor: "#F9FAFB", py: 8 }}>
+      <Container maxWidth="lg">
+        <Typography
+          variant="h4"
+          sx={{ color: "#2E3A59", fontWeight: 700, mb: 2, textAlign: "center" }}
+        >
+          {t("about_title")}
         </Typography>
-        <Typography align="center" color="text.secondary" sx={{ mb: 6 }}>
-          Empowering healthcare professionals through intelligent transcription and workflow tools.
+        <Typography sx={{ color: "text.secondary", textAlign: "center", mb: 5 }}>
+          {t("about_description")}
         </Typography>
 
-        {/* Team Section */}
-        <Typography variant="h5" fontWeight={600} align="center" sx={{ mb: 3 }}>
-          Meet the Team
-        </Typography>
-        <Grid container spacing={3}>
-          {team.map((member, i) => (
-            <Grid item xs={12} sm={6} md={4} key={i}>
-              <Paper
-                elevation={2}
+        {/* Team Grid 2x3 */}
+        <Grid container spacing={3} sx={{ mb: 6 }}>
+          {team.map((m) => (
+            <Grid item xs={12} sm={6} md={4} key={m.name}>
+              <Card
                 sx={{
-                  p: 4,
-                  textAlign: 'center',
-                  borderRadius: 3,
-                  transition: 'all 0.3s',
-                  '&:hover': { transform: 'translateY(-6px)', boxShadow: 6 },
+                  textAlign: "center",
+                  py: 4,
+                  transition: "transform .18s, box-shadow .18s",
+                  "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
                 }}
+                elevation={1}
               >
-                <Avatar sx={{ bgcolor: '#2E3A59', mx: 'auto', width: 64, height: 64, mb: 2 }}>
-                  {member.name[0]}
+                <Avatar
+                  sx={{
+                    width: 72,
+                    height: 72,
+                    mx: "auto",
+                    mb: 2,
+                    bgcolor: "#ffffff",
+                    boxShadow: 1,
+                    color: "#2E3A59",
+                    fontWeight: 700,
+                  }}
+                >
+                  {m.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)}
                 </Avatar>
-                <Typography fontWeight={600}>{member.name}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {member.role}
-                </Typography>
-              </Paper>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                    {m.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {t(m.roleKey)}
+                  </Typography>
+                  <Box sx={{ mt: 1 }}>
+                    <IconButton size="small" aria-label="linkedin">
+                      <LinkedInIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </CardContent>
+              </Card>
             </Grid>
           ))}
         </Grid>
 
         {/* Faculty Advisor */}
-        <Box sx={{ textAlign: 'center', mt: 6 }}>
-          <Typography variant="h6" fontWeight={600}>Professor Vinnie</Typography>
-          <Typography variant="body2" color="text.secondary">Faculty Advisor</Typography>
+        <Box sx={{ textAlign: "center", mb: 8 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            {t("about_faculty")}
+          </Typography>
+          <Typography color="text.secondary">
+            Professor Vinnie — {t("role_faculty")}
+          </Typography>
         </Box>
+
+        {/* Features (below team) */}
+        <Typography
+          variant="h5"
+          sx={{ color: "#2E3A59", fontWeight: 700, mb: 3, textAlign: "center" }}
+        >
+          {t("features_title")}
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                p: 2,
+                transition: "transform .18s, box-shadow .18s",
+                "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
+              }}
+              elevation={1}
+            >
+              <CardContent>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  {t("features_voice")}
+                </Typography>
+                <Typography color="text.secondary">{t("features_voice_text")}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                p: 2,
+                transition: "transform .18s, box-shadow .18s",
+                "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
+              }}
+              elevation={1}
+            >
+              <CardContent>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  {t("features_template")}
+                </Typography>
+                <Typography color="text.secondary">{t("features_template_text")}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                p: 2,
+                transition: "transform .18s, box-shadow .18s",
+                "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
+              }}
+              elevation={1}
+            >
+              <CardContent>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  {t("features_analytics")}
+                </Typography>
+                <Typography color="text.secondary">{t("features_analytics_text")}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );
-};
-
-export default About;
+}

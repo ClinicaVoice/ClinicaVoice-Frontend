@@ -1,21 +1,25 @@
-// src/theme.js
-import { createTheme } from '@mui/material/styles'
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#2E3A59' }, // Soft Navy
-    secondary: { main: '#C62828' }, // Maple Red
-    background: { default: '#F9FAFB', paper: '#FFFFFF' }, // Off White
-    text: { primary: '#000000' },
-    success: { main: '#26A69A' } // Sea Green
+    primary: { main: "#2E3A59" }, // soft navy
+    secondary: { main: "#26A69A" }, // sea green
+    error: { main: "#C62828" }, // maple red
+    background: { default: "#F9FAFB", paper: "#ffffff" },
+    text: { primary: "#000000" },
   },
   typography: {
-    fontFamily: ['Poppins', 'Roboto', 'sans-serif'].join(','),
-    h3: { fontWeight: 800 },
-    h4: { fontWeight: 600 }
+    fontFamily: ["Poppins", "Roboto", "sans-serif"].join(","),
+    h1: { fontWeight: 800 },
+    h2: { fontWeight: 700 },
   },
-  shape: { borderRadius: 12 }
+  components: {
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
+    },
+  },
 });
 
 export default theme;
-
