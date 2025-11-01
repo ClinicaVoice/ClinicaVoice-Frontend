@@ -2,11 +2,15 @@ import React from "react";
 import { AppBar, Toolbar, Box, Typography, Button, IconButton, MenuItem, Select } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import logo from "../assets/logo.jpeg";
+import { DarkMode, LightMode } from "@mui/icons-material";
+//import { useThemeMode } from "../context/ThemeContext";
+
+//import logo from "../assets/logo.jpeg";
 
 export default function Header() {
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
+  //const { mode, toggleMode } = useThemeMode();
   const loggedIn = !!sessionStorage.getItem("clinica_token");
 
   const handleLogout = () => {
@@ -78,6 +82,9 @@ export default function Header() {
             <MenuItem value="en">EN 🇬🇧</MenuItem>
             <MenuItem value="fr">FR 🇫🇷</MenuItem>
           </Select>
+          {/* <IconButton color="inherit" onClick={toggleMode}>
+            {mode === "dark" ? <LightMode /> : <DarkMode />}
+          </IconButton> */}
         </Box>
       </Toolbar>
     </AppBar>

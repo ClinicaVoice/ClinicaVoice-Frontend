@@ -1,196 +1,245 @@
+// /* import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import {
+//   Box,
+//   Button,
+//   TextField,
+//   Typography,
+//   Paper,
+//   CircularProgress,
+//   Alert,
+// } from "@mui/material";
+// import { signUp } from "aws-amplify/auth";
+// import Auth from "./mockAuth"; // use the same local mock
+
+
+// export default function Register() {
+//   const { t } = useTranslation();
+//   const navigate = useNavigate();
+//   const [form, setForm] = useState({ name: "", email: "", password: "" });
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState("");
+//   const [success, setSuccess] = useState("");
+
+//   const handleChange = (e) => {
+//     setForm({ ...form, [e.target.name]: e.target.value });
+//   };
+
+//   /* const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setError("");
+//     setSuccess("");
+//     setLoading(true);
+//     try {
+//       await signUp({
+//         username: form.email,
+//         password: form.password,
+//         options: {
+//           userAttributes: { name: form.name, email: form.email },
+//         },
+//       });
+//       setSuccess(t("signup_success"));
+//       setTimeout(() => navigate("/login"), 2000);
+//     } catch (err) {
+//       console.error("Registration failed:", err);
+//       setError(t("signup_error"));
+//     } finally {
+//       setLoading(false);
+//     }
+//   }; */
+ 
+
+
+//   return (
+//     <Box
+//       sx={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "90vh",
+//         backgroundColor: "#F9FAFB",
+//       }}
+//     >
+//       <Paper sx={{ p: 4, width: 400, boxShadow: 4, borderRadius: 2 }}>
+//         <Typography variant="h4" fontWeight={600} textAlign="center" mb={2}>
+//           {t("signup_title")}
+//         </Typography>
+
+//         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+//         {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+
+//         <form onSubmit={handleSubmit}>
+//           <TextField
+//             fullWidth
+//             name="name"
+//             label={t("signup_name")}
+//             variant="outlined"
+//             margin="normal"
+//             value={form.name}
+//             onChange={handleChange}
+//             required
+//           />
+//           <TextField
+//             fullWidth
+//             name="email"
+//             label={t("signup_email")}
+//             variant="outlined"
+//             margin="normal"
+//             value={form.email}
+//             onChange={handleChange}
+//             required
+//           />
+//           <TextField
+//             fullWidth
+//             name="password"
+//             label={t("signup_password")}
+//             variant="outlined"
+//             type="password"
+//             margin="normal"
+//             value={form.password}
+//             onChange={handleChange}
+//             required
+//           />
+//           <Button
+//             fullWidth
+//             variant="contained"
+//             color="primary"
+//             sx={{ mt: 3, py: 1.5, textTransform: "none" }}
+//             type="submit"
+//             disabled={loading}
+//           >
+//             {loading ? <CircularProgress size={24} color="inherit" /> : t("signup_button")}
+//           </Button>
+//         </form>
+//       </Paper>
+//     </Box>
+//   );
+// }
+ 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
-  Avatar,
   Box,
   Button,
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  IconButton,
-  InputAdornment,
   TextField,
   Typography,
+  Paper,
+  CircularProgress,
   Alert,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import { useNavigate } from "react-router-dom";
-//import logo from "../assets/logo.jpeg";
-import { useTranslation } from "react-i18next";
+import Auth from "./mockAuth"; // your mock Auth file
 
 export default function Register() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(false);
+    setSuccess("");
+    setLoading(true);
 
-    if (!form.name || !form.email || !form.password) {
-      setError("All fields are required.");
-      return;
+    try {
+      // Pass form values to mock Auth
+      const user = await Auth.signUp({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
+      console.log("Registered user:", user);
+
+      setSuccess(t("signup_success"));
+      setTimeout(() => navigate("/dashboard"), 1500);
+    } catch (err) {
+      console.error("Registration failed:", err);
+      setError(t("register_error"));
+    } finally {
+      setLoading(false);
     }
-
-    // Mock successful registration
-    sessionStorage.setItem("clinica_token", "mock_token");
-    setSuccess(true);
-    setTimeout(() => navigate("/dashboard"), 1200);
   };
 
   return (
-    <Box sx={{ backgroundColor: "#F9FAFB", minHeight: "100vh", display: "flex", alignItems: "center" }}>
-      <Container maxWidth="sm">
-        <Card elevation={4} sx={{ borderRadius: 3, overflow: "hidden" }}>
-          <Grid container>
-            {/* Header logo */}
-            <Grid
-              item
-              xs={12}
-              sx={{
-                backgroundColor: "#2E3A59",
-                display: "flex",
-                justifyContent: "center",
-                py: 3,
-              }}
-            >
-              <Box
-                component="img"
-                src="/logo.jpeg"
-                alt="ClinicaVoice logo"
-                sx={{
-                  height: 60,
-                  width: "auto",
-                  borderRadius: 1,
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-                }}
-              />
-            </Grid>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "90vh",
+        backgroundColor: "#F9FAFB",
+      }}
+    >
+      <Paper sx={{ p: 4, width: 400, boxShadow: 4, borderRadius: 2 }}>
+        <Typography
+          variant="h4"
+          fontWeight={600}
+          textAlign="center"
+          mb={2}
+        >
+          {t("signup_title")}
+        </Typography>
 
-            {/* Form */}
-            <Grid item xs={12}>
-              <CardContent sx={{ p: 5 }}>
-                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <Avatar sx={{ m: 1, bgcolor: "#26A69A" }}>
-                    <PersonAddAlt1Icon />
-                  </Avatar>
-                  <Typography component="h1" variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
-                    {t("register_title") || "Create an Account"}
-                  </Typography>
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
-                  {error && (
-                    <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
-                      {error}
-                    </Alert>
-                  )}
-
-                  {success && (
-                    <Alert severity="success" sx={{ mb: 2, width: "100%" }}>
-                      {t("register_success") || "Account created successfully! Redirecting..."}
-                    </Alert>
-                  )}
-
-                  <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="name"
-                      label={t("register_name") || "Full Name"}
-                      name="name"
-                      autoComplete="name"
-                      value={form.name}
-                      onChange={handleChange}
-                    />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="email"
-                      label={t("register_email") || "Email Address"}
-                      name="email"
-                      autoComplete="email"
-                      value={form.email}
-                      onChange={handleChange}
-                    />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="password"
-                      label={t("register_password") || "Password"}
-                      type={showPassword ? "text" : "password"}
-                      id="password"
-                      value={form.password}
-                      onChange={handleChange}
-                      autoComplete="new-password"
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
-                              edge="end"
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{
-                        mt: 3,
-                        mb: 2,
-                        bgcolor: "#26A69A",
-                        "&:hover": { bgcolor: "#1f8c82" },
-                        borderRadius: 2,
-                        py: 1.4,
-                        fontWeight: 600,
-                        textTransform: "none",
-                      }}
-                    >
-                      {t("register_button") || "Sign Up"}
-                    </Button>
-
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      align="center"
-                      sx={{ mt: 2 }}
-                    >
-                      {t("register_haveaccount") || "Already have an account?"}{" "}
-                      <Button
-                        onClick={() => navigate("/login")}
-                        sx={{
-                          textTransform: "none",
-                          color: "#C62828",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {t("register_signin") || "Sign In"}
-                      </Button>
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Grid>
-          </Grid>
-        </Card>
-      </Container>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            name="name"
+            label={t("signup_name")}
+            variant="outlined"
+            margin="normal"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            name="email"
+            label={t("signup_email")}
+            variant="outlined"
+            margin="normal"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            name="password"
+            label={t("signup_password")}
+            variant="outlined"
+            type="password"
+            margin="normal"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, py: 1.5, textTransform: "none" }}
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              t("signup_button")
+            )}
+          </Button>
+        </form>
+      </Paper>
     </Box>
   );
 }

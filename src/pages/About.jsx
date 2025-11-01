@@ -1,8 +1,17 @@
-// src/pages/About.jsx
 import React from "react";
-import { Container, Box, Typography, Grid, Card, CardContent, Avatar, IconButton } from "@mui/material";
+import {
+  Container,
+  Box,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Avatar,
+  IconButton,
+} from "@mui/material";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const team = [
   { name: "John Austria", roleKey: "role_pm" },
@@ -15,6 +24,26 @@ const team = [
 
 export default function About() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  // Define where each feature should link
+  const features = [
+    {
+      key: "features_voice",
+      textKey: "features_voice_text",
+      link: "/dashboard/transcribe",
+    },
+    {
+      key: "features_template",
+      textKey: "features_template_text",
+      link: "/dashboard/reports",
+    },
+    {
+      key: "features_analytics",
+      textKey: "features_analytics_text",
+      link: "/dashboard/analytics",
+    },
+  ];
 
   return (
     <Box sx={{ backgroundColor: "#F9FAFB", py: 8 }}>
@@ -95,60 +124,33 @@ export default function About() {
         >
           {t("features_title")}
         </Typography>
+
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
-            <Card
-              sx={{
-                p: 2,
-                transition: "transform .18s, box-shadow .18s",
-                "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
-              }}
-              elevation={1}
-            >
-              <CardContent>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                  {t("features_voice")}
-                </Typography>
-                <Typography color="text.secondary">{t("features_voice_text")}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Card
-              sx={{
-                p: 2,
-                transition: "transform .18s, box-shadow .18s",
-                "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
-              }}
-              elevation={1}
-            >
-              <CardContent>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                  {t("features_template")}
-                </Typography>
-                <Typography color="text.secondary">{t("features_template_text")}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Card
-              sx={{
-                p: 2,
-                transition: "transform .18s, box-shadow .18s",
-                "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
-              }}
-              elevation={1}
-            >
-              <CardContent>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                  {t("features_analytics")}
-                </Typography>
-                <Typography color="text.secondary">{t("features_analytics_text")}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          {features.map((f) => (
+            <Grid item xs={12} md={4} key={f.key}>
+              <Card
+                sx={{
+                  p: 2,
+                  transition: "transform .18s, box-shadow .18s",
+                  "&:hover": {
+                    transform: "translateY(-6px)",
+                    boxShadow: 6,
+                    backgroundColor: "#fff8f8",
+                    cursor: "pointer",
+                  },
+                }}
+                elevation={1}
+                onClick={() => navigate(f.link)}
+              >
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                    {t(f.key)}
+                  </Typography>
+                  <Typography color="text.secondary">{t(f.textKey)}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
       </Container>
     </Box>
