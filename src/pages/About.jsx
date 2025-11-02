@@ -8,10 +8,15 @@ import {
   CardContent,
   Avatar,
   IconButton,
+  Button,
+  Stack,
+  Link as MUILink,
+  CardActions,
 } from "@mui/material";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 // 🖼 Import team images
 import John from "../assets/John.jpg";
@@ -34,13 +39,13 @@ const team = [
     name: "Omotola",
     roleKey: "role_frontend",
     image: Omotola,
-    linkedin: "https://www.linkedin.com/in/omotola-onigbogi/",
+    linkedin: "https://www.linkedin.com/in/omotola-onigbogi-102940212",
   },
   {
     name: "Brian",
     roleKey: "role_ai",
     image: Brian,
-    linkedin: "https://www.linkedin.com/in/brian-ajunwa/",
+    linkedin: "https://www.linkedin.com/in/brian-ajunwa-744357311",
   },
   {
     name: "Chinedu",
@@ -52,13 +57,13 @@ const team = [
     name: "Onyebuchi",
     roleKey: "role_devops",
     image: Onyebuchi,
-    linkedin: "https://www.linkedin.com/in/onyebuchi-john-okoli/",
+    linkedin: "http://linkedin.com/in/onyebuchi-okoli-098376209",
   },
   {
     name: "Amaka",
     roleKey: "role_qa",
     image: Amaka,
-    linkedin: "https://www.linkedin.com/in/chiamaka-okoye/",
+    linkedin: "https://www.linkedin.com/in/chiamaka-okoye-1653b66a",
   },
 ];
 
@@ -112,30 +117,49 @@ export default function About() {
                 }}
                 elevation={1}
               >
-                <Avatar
-                  alt={m.name}
-                  src={m.image}
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    mx: "auto",
-                    mb: 2,
-                    bgcolor: "#ffffff",
-                    boxShadow: 1,
-                    objectFit: "cover",
-                  }}
-                />
+                {/* Make avatar clickable to LinkedIn */}
+                <MUILink
+                  href={m.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="none"
+                  aria-label={`${m.name} LinkedIn profile`}
+                >
+                  <Avatar
+                    alt={m.name}
+                    src={m.image}
+                    sx={{
+                      width: 80,
+                      height: 80,
+                      mx: "auto",
+                      mb: 2,
+                      bgcolor: "#ffffff",
+                      boxShadow: 1,
+                      objectFit: "cover",
+                    }}
+                  />
+                </MUILink>
+
                 <CardContent>
+                  {/* Make name clickable too */}
                   <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                    {m.name}
+                    <MUILink
+                      href={m.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="hover"
+                      color="inherit"
+                    >
+                      {m.name}
+                    </MUILink>
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {t(m.roleKey)}
                   </Typography>
-                  <Box sx={{ mt: 1 }}>
+                  <Stack direction="row" spacing={1} justifyContent="center" sx={{ mt: 1 }}>
                     <IconButton
                       size="small"
-                      aria-label="linkedin"
+                      aria-label={`${m.name} on LinkedIn`}
                       component="a"
                       href={m.linkedin}
                       target="_blank"
@@ -143,7 +167,7 @@ export default function About() {
                     >
                       <LinkedInIcon fontSize="small" color="primary" />
                     </IconButton>
-                  </Box>
+                  </Stack>
                 </CardContent>
               </Card>
             </Grid>
@@ -193,8 +217,17 @@ export default function About() {
           {features.map((f) => (
             <Grid item xs={12} md={4} key={f.key}>
               <Card
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") navigate(f.link);
+                }}
                 sx={{
                   p: 2,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
                   transition: "transform .18s, box-shadow .18s",
                   "&:hover": {
                     transform: "translateY(-6px)",
@@ -212,10 +245,36 @@ export default function About() {
                   </Typography>
                   <Typography color="text.secondary">{t(f.textKey)}</Typography>
                 </CardContent>
+                <CardActions sx={{ pt: 0, px: 2, pb: 2 }}>
+                  {/* Direct link button for accessibility and right-click open in new tab */}
+                  <Button
+                    component={RouterLink}
+                    to={f.link}
+                    endIcon={<ArrowForwardIcon />}
+                    size="small"
+                  >
+                    {t("open_feature", "Open")}
+                  </Button>
+                </CardActions>
               </Card>
             </Grid>
           ))}
         </Grid>
+
+        {/* 🔗 Helpful internal links (optional) */}
+        <Box sx={{ mt: 6, textAlign: "center" }}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
+            <Button component={RouterLink} to="/privacy" variant="text">
+              {t("link_privacy", "Privacy Policy")}
+            </Button>
+            <Button component={RouterLink} to="/terms" variant="text">
+              {t("link_terms", "Terms of Use")}
+            </Button>
+            <Button component={RouterLink} to="/docs" variant="text">
+              {t("link_docs", "Docs")}
+            </Button>
+          </Stack>
+        </Box>
       </Container>
     </Box>
   );
