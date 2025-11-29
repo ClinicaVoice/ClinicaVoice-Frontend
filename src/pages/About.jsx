@@ -25,7 +25,10 @@ import Brian from "../assets/Brian.jpg";
 import Chinedu from "../assets/Chinedu.jpg";
 import Onyebuchi from "../assets/JohnO.jpg";
 import Amaka from "../assets/Amaka.jpg";
-import Vinnie from "../assets/Vinnie.jpg"; // Professor's image
+
+// 🧑‍🏫 Faculty photos (add the file below to src/assets)
+import Vinnie from "../assets/Vinnie.jpg";
+import Georgi from "../assets/Georgi.jpeg"; 
 
 // 👥 Team members
 const team = [
@@ -64,6 +67,22 @@ const team = [
     roleKey: "role_qa",
     image: Amaka,
     linkedin: "https://www.linkedin.com/in/chiamaka-okoye-1653b66a",
+  },
+];
+
+// 🧑‍🏫 Faculty advisors (add LinkedIn URLs if you want icons clickable)
+const advisors = [
+  {
+    name: "Professor Vinnie Moraes",
+    image: Vinnie,
+    roleKey: "role_faculty",
+    linkedin: undefined, // e.g., "https://www.linkedin.com/in/..."
+  },
+  {
+    name: "Professor Georgi Ivanov",
+    image: Georgi,
+    roleKey: "role_faculty",
+    linkedin: undefined, // e.g., "https://www.linkedin.com/in/..."
   },
 ];
 
@@ -174,35 +193,59 @@ export default function About() {
           ))}
         </Grid>
 
-        {/* 👨‍🏫 Faculty Advisor Section */}
-        <Box
-          sx={{
-            textAlign: "center",
-            mb: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 1.5,
-          }}
-        >
-          <Avatar
-            alt="Professor Vinnie"
-            src={Vinnie}
-            sx={{
-              width: 90,
-              height: 90,
-              mb: 1,
-              boxShadow: 2,
-              border: "3px solid #fff",
-              objectFit: "cover",
-            }}
-          />
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+        {/* 👨‍🏫 Faculty Advisors (now supports multiple) */}
+        <Box sx={{ textAlign: "center", mb: 8 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
             {t("about_faculty")}
           </Typography>
-          <Typography color="text.secondary" sx={{ fontSize: "0.95rem" }}>
-            Professor Vinnie Moraes — {t("role_faculty")}
-          </Typography>
+
+          <Grid container spacing={3} justifyContent="center">
+            {advisors.map((a) => (
+              <Grid item xs={12} sm={6} md="auto" key={a.name}>
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 1.5,
+                    px: 2,
+                  }}
+                >
+                  <Avatar
+                    alt={a.name}
+                    src={a.image}
+                    sx={{
+                      width: 90,
+                      height: 90,
+                      mb: 1,
+                      boxShadow: 2,
+                      border: "3px solid #fff",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <Typography sx={{ fontWeight: 700 }}>{a.name}</Typography>
+                  <Typography color="text.secondary" sx={{ fontSize: "0.95rem" }}>
+                    {t(a.roleKey)}
+                  </Typography>
+
+                  {a.linkedin && (
+                    <IconButton
+                      size="small"
+                      aria-label={`${a.name} on LinkedIn`}
+                      component="a"
+                      href={a.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ mt: 0.5 }}
+                    >
+                      <LinkedInIcon fontSize="small" color="primary" />
+                    </IconButton>
+                  )}
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
         </Box>
 
         {/* ⚙️ Features Section */}
@@ -246,7 +289,6 @@ export default function About() {
                   <Typography color="text.secondary">{t(f.textKey)}</Typography>
                 </CardContent>
                 <CardActions sx={{ pt: 0, px: 2, pb: 2 }}>
-                  {/* Direct link button for accessibility and right-click open in new tab */}
                   <Button
                     component={RouterLink}
                     to={f.link}
